@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* CSS tambahan untuk menyesuaikan tampilan */
+        body {
+            padding: 20px;
+        }
+
+        .json-item {
+            margin-bottom: 20px;
+        }
+
+        .json-key {
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
+</head>
+
+<body>
+    <h1>Daftar JSON Responsif dari Firebase Realtime Database</h1>
+    <div id="json-container" class="container"></div>
+
+    <script>
+        // Inisialisasi Firebase SDK
+        var firebaseConfig = {
+            apiKey: "AIzaSyBWMpnteXJ02-866GqeC-3PZ-tc4ismiQM",
+            authDomain: "gps-tracking-a6720.firebaseapp.com",
+            databaseURL: "https://gps-tracking-a6720-default-rtdb.firebaseio.com",
+            projectId: "gps-tracking-a6720",
+            storageBucket: "gps-tracking-a6720.appspot.com",
+            messagingSenderId: "1022620312323",
+            appId: "1:1022620312323:web:121b87000efd09e7687f36"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        // Mendapatkan referensi ke lokasi data di database
+        var database = firebase.database();
+        var dataRef = database.ref("Riwayat");
+
+        // Mendapatkan data dari Firebase Realtime Database
+        dataRef.on("value", function (snapshot) {
+            var data = snapshot.val();
+            var jsonContainer = document.getElementById("json-container");
+
+            // Menghapus data sebelumnya (jika ada)
+            jsonContainer.innerHTML = "";
+
+            // Menampilkan data JSON di halaman HTML
+            renderJSON(jsonContainer, data);
+        });
+
+        // Fungsi rekursif untuk render data JSON
+        function renderJSON(container, data) {
+            var isArray = Array.isArray(data);
+            var isObject = typeof data === "object" && !isArray;
+
+            if (isArray) {
+                var listElement = document.createElement("ul");
+                listElement.classList.add("list-group");
+
+                for (var i = 0; i < data.length; i++) {
+                    var listItem = document.createElement("li");
+                    listItem.classList.add("list-group-item");
+                    listItem.classList.add("json-item");
+
+                    renderJSON(listItem, data[i]);
+
+                    listElement.appendChild(listItem);
+                }
+
+                container.appendChild(listElement);
+            } else if (isObject) {
+                var listElement = document.createElement("ul");
+                listElement.classList.add("list-group");
+
+                for (var key in data) {
+                    var listItem = document.createElement("li");
+                    listItem.classList.add("list-group-item");
+                    listItem.classList.add("json-item");
+
+                    var keyElement = document.createElement("span");
+                    keyElement.classList.add("json-key");
+                    keyElement.textContent = key + ": ";
+                    listItem.appendChild(keyElement);
+
+                    renderJSON(listItem, data[key]);
+
+                    listElement.appendChild(listItem);
+                }
+
+                container.appendChild(listElement);
+            } else {
+                var valueElement = document.createElement("span");
+                valueElement.textContent = data;
+                container.appendChild(valueElement);
+            }
+        }
+    </script>
+</body>
+
+</html>
