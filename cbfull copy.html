@@ -10,10 +10,18 @@
     .riwayat-item {
       margin-bottom: 10px;
     }
+
+    #map {
+      display: none;
+      height: 400px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
   <h1>Riwayat dan Peta</h1>
+  <div id="map"></div>
+
   <div class="riwayat-container" id="riwayat-container"></div>
 
   <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
@@ -58,16 +66,29 @@
         var riwayatText = document.createElement("span");
         riwayatText.textContent = "ID: " + key;
 
-        riwayatItem.appendChild(riwayatText);
         riwayatItem.appendChild(riwayatButton);
+        riwayatItem.appendChild(riwayatText);
         riwayatContainer.appendChild(riwayatItem);
       });
     }
 
     function showMap(latitude, longitude) {
-      var url = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
-      window.open(url, "_blank");
+      var mapDiv = document.getElementById("map");
+      mapDiv.style.display = "block"; // Tampilkan peta
+
+      var myLatLng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+      var map = new google.maps.Map(mapDiv, {
+        zoom: 12,
+        center: myLatLng
+      });
+
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: "Lokasi"
+      });
     }
   </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWL83y2wcA2CrMzZZKBY6S0SHcs5Tp9u0&callback=initMap" async defer></script>
 </body>
 </html>
