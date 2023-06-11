@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* CSS untuk menentukan ukuran peta */
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Peta</h1>
+  <div id="map"></div>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWL83y2wcA2CrMzZZKBY6S0SHcs5Tp9u0"></script>
+  <script>
+    // Inisialisasi peta
+    function initMap() {
+      var myLatLng = {lat: -7.83569, lng: 110.31787364706612}; // Koordinat lat dan lng
+
+      var map = new google.maps.Map(document.getElementById('map'), {
+        center: myLatLng,
+        zoom: 12 // Zoom level
+      });
+
+      // Menambahkan marker pada peta
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: 'Lokasi'
+      });
+    }
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWL83y2wcA2CrMzZZKBY6S0SHcs5Tp9u0&callback=initMap"></script>
+</body>
+</html>
