@@ -51,28 +51,37 @@
     });
 
     function renderRiwayat(riwayat) {
-      var riwayatContainer = document.getElementById("riwayat-container");
+  var riwayatContainer = document.getElementById("riwayat-container");
 
-      Object.keys(riwayat).forEach(function(key) {
-        var riwayatItem = document.createElement("div");
-        riwayatItem.classList.add("riwayat-item");
+  Object.keys(riwayat).forEach(function (key) {
+    var riwayatItem = document.createElement("div");
+    riwayatItem.classList.add("riwayat-item");
 
-        var riwayatText = document.createElement("span");
-        riwayatText.textContent = "ID: " + key + ", Latitude: " + riwayat[key].f_latitude + ", Longitude: " + riwayat[key].f_longitude + "   ";
+    var riwayatText = document.createElement("span");
+    riwayatText.innerHTML =
+      "ID: " +
+      key +
+      "<br>" +
+      "Latitude: " +
+      riwayat[key].f_latitude +
+      "<br>" +
+      "Longitude: " +
+      riwayat[key].f_longitude;
 
-        var riwayatButton = document.createElement("button");
-        riwayatButton.textContent = "Tampilkan Peta";
-        riwayatButton.addEventListener("click", function() {
-          var latitude = riwayat[key].f_latitude;
-          var longitude = riwayat[key].f_longitude;
-          showMap(latitude, longitude);
-        });
+    var riwayatButton = document.createElement("button");
+    riwayatButton.textContent = "Tampilkan Peta";
+    riwayatButton.addEventListener("click", function () {
+      var latitude = riwayat[key].f_latitude;
+      var longitude = riwayat[key].f_longitude;
+      showMap(latitude, longitude);
+    });
 
-        riwayatItem.appendChild(riwayatText);
-        riwayatItem.appendChild(riwayatButton);
-        riwayatContainer.appendChild(riwayatItem);
-      });
-    }
+    riwayatItem.appendChild(riwayatText);
+    riwayatItem.appendChild(riwayatButton);
+    riwayatContainer.appendChild(riwayatItem);
+  });
+}
+
 
     function showMap(latitude, longitude) {
       var mapDiv = document.getElementById("map");
