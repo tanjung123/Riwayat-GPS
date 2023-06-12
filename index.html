@@ -1,35 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Riwayat dn Peta</title>
+  <title>Riwayat dan Peta</title>
   <style>
-body {
-    background-color: #01FCFCFE;
-    text-align: center;
-}
-h1 {
-    font-size: 100px;
-}
-
     .riwayat-container {
       margin-top: 20px;
-font-size: 50px;
     }
 
     .riwayat-item {
       margin-bottom: 10px;
     }
+
+    #map {
+      display: none;
+      height: 400px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <!-- <h1>Riwayat dan Peta</h1> -->
-  <div class="riwayat-container" id="riwayat-container"></div>
+  <h1>Riwayat dan Peta</h1>
+  <div id="riwayat-container"></div>
+
+  <div id="map"></div>
 
   <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
   <script>
     var firebaseConfig = {
-        apiKey: "AIzaSyBWMpnteXJ02-866GqeC-3PZ-tc4ismiQM",
+      apiKey: "AIzaSyBWMpnteXJ02-866GqeC-3PZ-tc4ismiQM",
             authDomain: "gps-tracking-a6720.firebaseapp.com",
             databaseURL: "https://gps-tracking-a6720-default-rtdb.firebaseio.com",
             projectId: "gps-tracking-a6720",
@@ -57,15 +56,16 @@ font-size: 50px;
         var riwayatItem = document.createElement("div");
         riwayatItem.classList.add("riwayat-item");
 
+        var riwayatText = document.createElement("span");
+        riwayatText.textContent = "ID: " + key + ", Latitude: " + riwayat[key].f_latitude + ", Longitude: " + riwayat[key].f_longitude;
+
         var riwayatButton = document.createElement("button");
         riwayatButton.textContent = "Tampilkan Peta";
         riwayatButton.addEventListener("click", function() {
-          var item = riwayat[key];
-          showMap(item.f_latitude, item.f_longitude);
+          var latitude = riwayat[key].f_latitude;
+          var longitude = riwayat[key].f_longitude;
+          showMap(latitude, longitude);
         });
-
-        var riwayatText = document.createElement("span");
-        riwayatText.textContent = "ID: " + key;
 
         riwayatItem.appendChild(riwayatText);
         riwayatItem.appendChild(riwayatButton);
@@ -74,9 +74,22 @@ font-size: 50px;
     }
 
     function showMap(latitude, longitude) {
-      var url = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
-      window.open(url, "_blank");
+      var mapDiv = document.getElementById("map");
+      mapDiv.style.display = "block"; // Tampilkan peta
+
+      var myLatLng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+      var map = new google.maps.Map(mapDiv, {
+        zoom: 12,
+        center: myLatLng
+      });
+
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: "Lokasi"
+      });
     }
   </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWL83y2wcA2CrMzZZKBY6S0SHcs5Tp9u0&callback=initMap" async defer></script>
 </body>
 </html>
