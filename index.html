@@ -83,23 +83,27 @@
 }
 
 
+    // function showMap(latitude, longitude) {
+    //   var mapDiv = document.getElementById("map");
+    //   mapDiv.style.display = "block"; // Tampilkan peta
+
+    //   var myLatLng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+    //   var map = new google.maps.Map(mapDiv, {
+    //     zoom: 12,
+    //     center: myLatLng
+    //   });
+
+    //   var marker = new google.maps.Marker({
+    //     position: myLatLng,
+    //     map: map,
+    //     title: "Lokasi"
+    //   });
+    // }
     function showMap(latitude, longitude) {
-      var mapDiv = document.getElementById("map");
-      mapDiv.style.display = "block"; // Tampilkan peta
-
-      var myLatLng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
-      var map = new google.maps.Map(mapDiv, {
-        zoom: 12,
-        center: myLatLng
-      });
-
-      var marker = new google.maps.Marker({
-        position: myLatLng,
-        map: map,
-        title: "Lokasi"
-      });
+      var url = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
+      window.open(url, "_blank");
     }
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWL83y2wcA2CrMzZZKBY6S0SHcs5Tp9u0&callback=initMap" async defer></script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWL83y2wcA2CrMzZZKBY6S0SHcs5Tp9u0&callback=initMap" async defer></script> -->
 </body>
 </html>
