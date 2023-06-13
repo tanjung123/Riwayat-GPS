@@ -173,29 +173,33 @@
       });
     }
 
+    // function showMap(latitude, longitude) {
+    //   var mapDiv = document.getElementById("map");
+    //   mapDiv.style.display = "block";
+    //   mapDiv.innerHTML = "";
+
+    //   var map = new google.maps.Map(mapDiv, {
+    //     center: {
+    //       lat: parseFloat(latitude),
+    //       lng: parseFloat(longitude)
+    //     },
+    //     zoom: 12
+    //   });
+
+    //   var marker = new google.maps.Marker({
+    //     position: {
+    //       lat: parseFloat(latitude),
+    //       lng: parseFloat(longitude)
+    //     },
+    //     map: map
+    //   });
+    // }
     function showMap(latitude, longitude) {
-      var mapDiv = document.getElementById("map");
-      mapDiv.style.display = "block";
-      mapDiv.innerHTML = "";
-
-      var map = new google.maps.Map(mapDiv, {
-        center: {
-          lat: parseFloat(latitude),
-          lng: parseFloat(longitude)
-        },
-        zoom: 12
-      });
-
-      var marker = new google.maps.Marker({
-        position: {
-          lat: parseFloat(latitude),
-          lng: parseFloat(longitude)
-        },
-        map: map
-      });
+      var url = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
+      window.open(url, "_blank");
     }
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWL83y2wcA2CrMzZZKBY6S0SHcs5Tp9u0&callback=initMap" async defer></script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWL83y2wcA2CrMzZZKBY6S0SHcs5Tp9u0&callback=initMap" async defer></script> -->
 </body>
 
 </html>
