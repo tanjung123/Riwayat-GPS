@@ -42,6 +42,7 @@
         <th>Tanggal</th>
         <th>Latitude</th>
         <th>Longitude</th>
+        <th>Speed</th>
         <th></th>
       </tr>
     </thead>
@@ -90,6 +91,9 @@
         var longitudeCell = document.createElement("td");
         longitudeCell.textContent = history[key].longitude;
 
+        var speedCell = document.createElement("td");
+        speedCell.textContent = history[key].speed;
+
         var petaCell = document.createElement("td");
         var petaButton = document.createElement("button");
         petaButton.textContent = "Tampilkan Peta";
@@ -103,6 +107,7 @@
         historyRow.appendChild(tglCell);
         historyRow.appendChild(latitudeCell);
         historyRow.appendChild(longitudeCell);
+        historyRow.appendChild(speedCell);
         historyRow.appendChild(petaCell);
 
         historyBody.appendChild(historyRow);
