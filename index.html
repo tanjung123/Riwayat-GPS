@@ -68,7 +68,7 @@
     var database = firebase.database();
     var coordinatesRef = database.ref("GPS/history");
 
-    coordinatesRef.once("value", function (snapshot) {
+    coordinatesRef.on("value", function (snapshot) {
       var history = snapshot.val();
 
       if (history) {
