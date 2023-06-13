@@ -2,22 +2,22 @@
 <html>
 
 <head>
-  <title>Riwayat dan Peta</title>
+  <title>history dan Peta</title>
   <style>
     body {
       background-color: #01FCFCFE;
 
     }
 
-    #riwayat-table {
+    #history-table {
       margin-top: 20px;
       border-collapse: collapse;
       width: 100%;
       font-size: 30px;
     }
 
-    #riwayat-table th,
-    #riwayat-table td {
+    #history-table th,
+    #history-table td {
       padding: 8px;
       border: 1px solid #ccc;
     }
@@ -35,8 +35,8 @@
 </head>
 
 <body>
-  <!-- <h1>Riwayat dan Peta</h1> -->
-  <table id="riwayat-table">
+  <!-- <h1>history dan Peta</h1> -->
+  <table id="history-table">
     <thead>
       <tr>
         <th>Tanggal</th>
@@ -45,7 +45,7 @@
         <th></th>
       </tr>
     </thead>
-    <tbody id="riwayat-body"></tbody>
+    <tbody id="history-body"></tbody>
   </table>
 
   <div id="map"></div>
@@ -65,47 +65,47 @@
     firebase.initializeApp(firebaseConfig);
 
     var database = firebase.database();
-    var coordinatesRef = database.ref("Riwayat");
+    var coordinatesRef = database.ref("history");
 
     coordinatesRef.once("value", function (snapshot) {
-      var riwayat = snapshot.val();
+      var history = snapshot.val();
 
-      if (riwayat) {
-        renderRiwayat(riwayat);
+      if (history) {
+        renderHistory(history);
       }
     });
 
-    function renderRiwayat(riwayat) {
-      var riwayatBody = document.getElementById("riwayat-body");
+    function renderHistory(history) {
+      var historyBody = document.getElementById("history-body");
 
-      Object.keys(riwayat).forEach(function (key) {
-        var riwayatRow = document.createElement("tr");
+      Object.keys(history).forEach(function (key) {
+        var historyRow = document.createElement("tr");
 
         var tglCell = document.createElement("td");
-        tglCell.textContent = riwayat[key].tgl;
+        tglCell.textContent = history[key].tgl;
 
         var latitudeCell = document.createElement("td");
-        latitudeCell.textContent = riwayat[key].f_latitude;
+        latitudeCell.textContent = history[key].f_latitude;
 
         var longitudeCell = document.createElement("td");
-        longitudeCell.textContent = riwayat[key].f_longitude;
+        longitudeCell.textContent = history[key].f_longitude;
 
         var petaCell = document.createElement("td");
         var petaButton = document.createElement("button");
         petaButton.textContent = "Tampilkan Peta";
         petaButton.addEventListener("click", function () {
-          var latitude = riwayat[key].f_latitude;
-          var longitude = riwayat[key].f_longitude;
+          var latitude = history[key].f_latitude;
+          var longitude = history[key].f_longitude;
           showMap(latitude, longitude);
         });
         petaCell.appendChild(petaButton);
 
-        riwayatRow.appendChild(tglCell);
-        riwayatRow.appendChild(latitudeCell);
-        riwayatRow.appendChild(longitudeCell);
-        riwayatRow.appendChild(petaCell);
+        historyRow.appendChild(tglCell);
+        historyRow.appendChild(latitudeCell);
+        historyRow.appendChild(longitudeCell);
+        historyRow.appendChild(petaCell);
 
-        riwayatBody.appendChild(riwayatRow);
+        historyBody.appendChild(historyRow);
       });
     }
 
