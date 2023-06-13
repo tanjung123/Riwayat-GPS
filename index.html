@@ -7,7 +7,7 @@
     body {
       background-color: #01FCFCFE;
     }
-    
+
     #riwayat-table {
       margin-top: 20px;
       border-collapse: collapse;
@@ -28,11 +28,11 @@
 </head>
 
 <body>
-  <h1>Riwayat dan Peta</h1>
+  <!-- <h1>Riwayat dan Peta</h1> -->
   <table id="riwayat-table">
     <thead>
       <tr>
-        <th>ID</th>
+        <th>Tanggal</th>
         <th>Latitude</th>
         <th>Longitude</th>
         <th></th>
@@ -74,8 +74,8 @@
       Object.keys(riwayat).forEach(function (key) {
         var riwayatRow = document.createElement("tr");
 
-        var idCell = document.createElement("td");
-        idCell.textContent = key;
+        var tglCell = document.createElement("td");
+        tglCell.textContent = riwayat[key].tgl;
 
         var latitudeCell = document.createElement("td");
         latitudeCell.textContent = riwayat[key].f_latitude;
@@ -93,7 +93,7 @@
         });
         petaCell.appendChild(petaButton);
 
-        riwayatRow.appendChild(idCell);
+        riwayatRow.appendChild(tglCell);
         riwayatRow.appendChild(latitudeCell);
         riwayatRow.appendChild(longitudeCell);
         riwayatRow.appendChild(petaCell);
