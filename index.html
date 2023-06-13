@@ -85,17 +85,17 @@
         tglCell.textContent = history[key].tgl;
 
         var latitudeCell = document.createElement("td");
-        latitudeCell.textContent = history[key].f_latitude;
+        latitudeCell.textContent = history[key].latitude;
 
         var longitudeCell = document.createElement("td");
-        longitudeCell.textContent = history[key].f_longitude;
+        longitudeCell.textContent = history[key].longitude;
 
         var petaCell = document.createElement("td");
         var petaButton = document.createElement("button");
         petaButton.textContent = "Tampilkan Peta";
         petaButton.addEventListener("click", function () {
-          var latitude = history[key].f_latitude;
-          var longitude = history[key].f_longitude;
+          var latitude = history[key].latitude;
+          var longitude = history[key].longitude;
           showMap(latitude, longitude);
         });
         petaCell.appendChild(petaButton);
