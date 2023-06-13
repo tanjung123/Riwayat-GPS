@@ -1,125 +1,187 @@
+
 <!DOCTYPE html>
 <html>
 
 <head>
-  <title>history dan Peta</title>
-  <style>
-    body {
-      background-color: #01FCFCFE;
+    <title>History dan Peta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #01FCFCFE;
+            margin: 0;
+            padding: 0;
+        }
 
-    }
+        #container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-    #history-table {
-      margin-top: 20px;
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 30px;
-    }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    #history-table th,
-    #history-table td {
-      padding: 8px;
-      border: 1px solid #ccc;
-    }
+        #history-table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-    button {
-      font-size: 30px;
-    }
+        #history-table th,
+        #history-table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
 
-    #map {
-      display: none;
-      height: 400px;
-      margin-top: 20px;
-    }
-  </style>
+        #history-table th {
+            background-color: #2196F2FF;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        #history-table td:nth-child(1),
+        #history-table td:nth-child(5) {
+            text-align: center;
+        }
+
+        #map {
+            display: none;
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 
 <body>
-  <!-- <h1>history dan Peta</h1> -->
-  <table id="history-table">
-    <thead>
-      <tr>
-        <th>Tanggal</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Speed</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="history-body"></tbody>
-  </table>
+    <div id="container">
+        <!-- <h1>History dan Peta</h1> -->
 
-  <div id="map"></div>
+        <table id="history-table">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Speed</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+        </table>
 
-  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
-  <script>
-    var firebaseConfig = {
-      apiKey: "AIzaSyBWMpnteXJ02-866GqeC-3PZ-tc4ismiQM",
-      authDomain: "gps-tracking-a6720.firebaseapp.com",
-      databaseURL: "https://gps-tracking-a6720-default-rtdb.firebaseio.com",
-      projectId: "gps-tracking-a6720",
-      storageBucket: "gps-tracking-a6720.appspot.com",
-      messagingSenderId: "1022620312323",
-      appId: "1:1022620312323:web:121b87000efd09e7687f36"
-    };
-    firebase.initializeApp(firebaseConfig);
+        <div id="map"></div>
+    </div>
 
-    var database = firebase.database();
-    var coordinatesRef = database.ref("GPS/history");
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyBWMpnteXJ02-866GqeC-3PZ-tc4ismiQM",
+            authDomain: "gps-tracking-a6720.firebaseapp.com",
+            databaseURL: "https://gps-tracking-a6720-default-rtdb.firebaseio.com",
+            projectId: "gps-tracking-a6720",
+            storageBucket: "gps-tracking-a6720.appspot.com",
+            messagingSenderId: "1022620312323",
+            appId: "1:1022620312323:web:121b87000efd09e7687f36"
+        };
+        firebase.initializeApp(firebaseConfig);
 
-    coordinatesRef.on("value", function (snapshot) {
-      var history = snapshot.val();
+        var database = firebase.database();
+        var coordinatesRef = database.ref("GPS/history");
 
-      if (history) {
-        renderHistory(history);
-      }
-    });
+        function sortHistoryByDate(history) {
+  var sortedKeys = Object.keys(history).sort(function (a, b) {
+    var dateA = new Date(history[a].tgl);
+    var dateB = new Date(history[b].tgl);
+    return dateB.getTime() - dateA.getTime();
+  });
 
-    function renderHistory(history) {
-      var historyBody = document.getElementById("history-body");
+  var sortedHistory = {};
+  sortedKeys.forEach(function (key) {
+    sortedHistory[key] = history[key];
+  });
 
-      Object.keys(history).forEach(function (key) {
-        var historyRow = document.createElement("tr");
+  return sortedHistory;
+}
 
-        var tglCell = document.createElement("td");
-        tglCell.textContent = history[key].tgl;
+coordinatesRef.on("value", function (snapshot) {
+  var history = snapshot.val();
 
-        var latitudeCell = document.createElement("td");
-        latitudeCell.textContent = history[key].latitude;
+  if (history) {
+    var sortedHistory = sortHistoryByDate(history);
+    renderHistory(sortedHistory);
+  }
+});
 
-        var longitudeCell = document.createElement("td");
-        longitudeCell.textContent = history[key].longitude;
 
-        var speedCell = document.createElement("td");
-        speedCell.textContent = history[key].speed;
+        function renderHistory(history) {
+            var historyBody = document.getElementById("history-body");
+            historyBody.innerHTML = "";
 
-        var petaCell = document.createElement("td");
-        var petaButton = document.createElement("button");
-        petaButton.textContent = "Tampilkan Peta";
-        petaButton.addEventListener("click", function () {
-          var latitude = history[key].latitude;
-          var longitude = history[key].longitude;
-          showMap(latitude, longitude);
-        });
-        petaCell.appendChild(petaButton);
+            Object.keys(history).forEach(function (key) {
+                var historyRow = document.createElement("tr");
 
-        historyRow.appendChild(tglCell);
-        historyRow.appendChild(latitudeCell);
-        historyRow.appendChild(longitudeCell);
-        historyRow.appendChild(speedCell);
-        historyRow.appendChild(petaCell);
+                var tglCell = document.createElement("td");
+                tglCell.textContent = history[key].tgl;
 
-        historyBody.appendChild(historyRow);
-      });
-    }
+                var latitudeCell = document.createElement("td");
+                latitudeCell.textContent = history[key].latitude;
 
-    function showMap(latitude, longitude) {
-      var url = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
-      window.open(url, "_blank");
-    }
-  </script>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script> -->
+                var longitudeCell = document.createElement("td");
+                longitudeCell.textContent = history[key].longitude;
+
+                var speedCell = document.createElement("td");
+                speedCell.textContent = parseInt(history[key].speed); // Menggunakan parseInt() untuk bilangan bulat
+
+                var petaCell = document.createElement("td");
+                var petaButton = document.createElement("button");
+                petaButton.textContent = "Tampilkan Peta";
+                petaButton.className = "btn";
+                petaButton.addEventListener("click", function () {
+                    var latitude = history[key].latitude;
+                    var longitude = history[key].longitude;
+                    showMap(latitude, longitude);
+                });
+                petaCell.appendChild(petaButton);
+
+                historyRow.appendChild(tglCell);
+                historyRow.appendChild(latitudeCell);
+                historyRow.appendChild(longitudeCell);
+                historyRow.appendChild(speedCell);
+                historyRow.appendChild(petaCell);
+
+                historyBody.appendChild(historyRow);
+            });
+        }
+
+
+        function showMap(latitude, longitude) {
+            var url = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
+            window.open(url, "_blank");
+        }
+    </script>
+
 </body>
 
 </html>
