@@ -2,22 +2,46 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* CSS untuk menentukan ukuran peta */
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+
+    /* CSS tambahan untuk menyesuaikan tampilan */
+    .json-item {
+      margin-bottom: 20px;
+    }
+    .json-key {
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1>Data Riwayat</h1>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Speed</th>
-        <th>Tanggal</th>
-      </tr>
-    </thead>
-    <tbody id="riwayat-table">
-    </tbody>
-  </table>
+  <h1>Peta dan Tabel Data Riwayat</h1>
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Peta</h2>
+      <div id="map"></div>
+    </div>
+    <div class="col-md-6">
+      <h2>Data Riwayat</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Speed</th>
+            <th>Tanggal</th>
+          </tr>
+        </thead>
+        <tbody id="riwayat-table">
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
@@ -43,12 +67,13 @@
       var riwayat = snapshot.val();
       var tableBody = document.getElementById("riwayat-table");
 
-      // Membersihkan tabel sebelum menampilkan data baru
+      // Membersihkan tabel dan peta sebelum menampilkan data baru
       tableBody.innerHTML = "";
+      clearMarkers();
 
       // Memeriksa apakah ada data riwayat
       if (riwayat) {
-        // Iterasi melalui setiap item riwayat
+        // Menampilkan data riwayat dalam tabel
         Object.keys(riwayat).forEach(function(itemKey) {
           var item = riwayat[itemKey];
           var row = document.createElement("tr");
@@ -74,9 +99,41 @@
           row.appendChild(tglCell);
 
           tableBody.appendChild(row);
+
+          // Menampilkan data riwayat dalam peta
+          var latitude = parseFloat(item.f_latitude);
+          var longitude = parseFloat(item.f_longitude);
+          addMarker(latitude, longitude);
         });
       }
     });
+
+    // Peta
+    var map;
+    var markers = [];
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 0, lng: 0 },
+        zoom: 2
+      });
+    }
+
+    function addMarker(latitude, longitude) {
+      var marker = new google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        map: map
+      });
+      markers.push(marker);
+    }
+
+    function clearMarkers() {
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
+      markers = [];
+    }
   </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 </body>
 </html>
