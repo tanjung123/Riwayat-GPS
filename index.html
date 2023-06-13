@@ -16,7 +16,7 @@
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #01FCFCFE;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
@@ -29,6 +29,7 @@
             margin-top: 20px;
             border-collapse: collapse;
             width: 100%;
+            font-size: 30px;
         }
 
         #history-table th,
@@ -74,7 +75,7 @@
 </head>
 
 <body>
-    <div id="container">
+    <!-- <div id="container"> -->
         <!-- <h1>History dan Peta</h1> -->
 
         <table id="history-table">
@@ -91,7 +92,7 @@
         </table>
 
         <div id="map"></div>
-    </div>
+    <!-- </div> -->
 
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
@@ -110,30 +111,29 @@
         var database = firebase.database();
         var coordinatesRef = database.ref("GPS/history");
 
+        coordinatesRef.on("value", function (snapshot) {
+            var history = snapshot.val();
+
+            if (history) {
+                var sortedHistory = sortHistoryByDate(history);
+                renderHistory(sortedHistory);
+            }
+        });
+
         function sortHistoryByDate(history) {
-  var sortedKeys = Object.keys(history).sort(function (a, b) {
-    var dateA = new Date(history[a].tgl);
-    var dateB = new Date(history[b].tgl);
-    return dateB.getTime() - dateA.getTime();
-  });
+            var sortedKeys = Object.keys(history).sort(function (a, b) {
+                var dateA = new Date(history[a].tgl);
+                var dateB = new Date(history[b].tgl);
+                return dateB - dateA;
+            });
 
-  var sortedHistory = {};
-  sortedKeys.forEach(function (key) {
-    sortedHistory[key] = history[key];
-  });
+            var sortedHistory = {};
+            sortedKeys.forEach(function (key) {
+                sortedHistory[key] = history[key];
+            });
 
-  return sortedHistory;
-}
-
-coordinatesRef.on("value", function (snapshot) {
-  var history = snapshot.val();
-
-  if (history) {
-    var sortedHistory = sortHistoryByDate(history);
-    renderHistory(sortedHistory);
-  }
-});
-
+            return sortedHistory;
+        }
 
         function renderHistory(history) {
             var historyBody = document.getElementById("history-body");
