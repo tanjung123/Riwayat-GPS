@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Riwayat dan Peta</title>
   <style>
     body {
       background-color: #01FCFCFE;
-      }
-    .riwayat-container {
+    }
+    
+    #riwayat-table {
       margin-top: 20px;
-      font-size: 150px;
+      border-collapse: collapse;
     }
 
-    .riwayat-item {
-      margin-bottom: 10px;
-      font-size: 50px;
-    }
-
-    button {
-      font-size: 50px;
+    #riwayat-table th,
+    #riwayat-table td {
+      padding: 8px;
+      border: 1px solid #ccc;
     }
 
     #map {
@@ -27,33 +26,41 @@
     }
   </style>
 </head>
+
 <body>
-  <!-- <h1>Riwayat dan Peta</h1> -->
-  <div id="riwayat-container"></div>
+  <h1>Riwayat dan Peta</h1>
+  <table id="riwayat-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="riwayat-body"></tbody>
+  </table>
 
   <div id="map"></div>
-
-
-  
 
   <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
   <script>
     var firebaseConfig = {
       apiKey: "AIzaSyBWMpnteXJ02-866GqeC-3PZ-tc4ismiQM",
-            authDomain: "gps-tracking-a6720.firebaseapp.com",
-            databaseURL: "https://gps-tracking-a6720-default-rtdb.firebaseio.com",
-            projectId: "gps-tracking-a6720",
-            storageBucket: "gps-tracking-a6720.appspot.com",
-            messagingSenderId: "1022620312323",
-            appId: "1:1022620312323:web:121b87000efd09e7687f36"
+      authDomain: "gps-tracking-a6720.firebaseapp.com",
+      databaseURL: "https://gps-tracking-a6720-default-rtdb.firebaseio.com",
+      projectId: "gps-tracking-a6720",
+      storageBucket: "gps-tracking-a6720.appspot.com",
+      messagingSenderId: "1022620312323",
+      appId: "1:1022620312323:web:121b87000efd09e7687f36"
     };
     firebase.initializeApp(firebaseConfig);
 
     var database = firebase.database();
     var coordinatesRef = database.ref("Riwayat");
 
-    coordinatesRef.once("value", function(snapshot) {
+    coordinatesRef.once("value", function (snapshot) {
       var riwayat = snapshot.val();
 
       if (riwayat) {
@@ -62,81 +69,45 @@
     });
 
     function renderRiwayat(riwayat) {
-  var riwayatContainer = document.getElementById("riwayat-container");
+      var riwayatBody = document.getElementById("riwayat-body");
 
-  Object.keys(riwayat).forEach(function (key) {
-    var riwayatItem = document.createElement("div");
-    riwayatItem.classList.add("riwayat-item");
+      Object.keys(riwayat).forEach(function (key) {
+        var riwayatRow = document.createElement("tr");
 
-    var riwayatText = document.createElement("span");
-    riwayatText.innerHTML =
-      // "ID: " +
-      // key +
-      // "<br>" +
-"<table>" +
-    "<tr>" +
-      "<td>" +
-        "Tanggal: " +
-      "</td>" +
-      "<td>" +
-        ": " +
-      "</td>" +
-      "<td>" +
-        riwayat[key].tgl +
-      "</td>" +
-    "</tr>" +
-  "</table>" +
-  "<br>"
+        var idCell = document.createElement("td");
+        idCell.textContent = key;
 
-      "Tanggal: " +
-      riwayat[key].tgl +
-      "<br>" +
-      "Latitude: " +
-      riwayat[key].f_latitude +
-      "<br>" +
-      "Longitude: " +
-      riwayat[key].f_longitude +
-      "<br>" +
-      "Speed: " +
-      riwayat[key].f_speed + km/jam +
-      "<br>";
+        var latitudeCell = document.createElement("td");
+        latitudeCell.textContent = riwayat[key].f_latitude;
 
-    var riwayatButton = document.createElement("button");
-    riwayatButton.textContent = "Tampilkan Peta";
-    riwayatButton.addEventListener("click", function () {
-      var latitude = riwayat[key].f_latitude;
-      var longitude = riwayat[key].f_longitude;
-      showMap(latitude, longitude);
-    });
+        var longitudeCell = document.createElement("td");
+        longitudeCell.textContent = riwayat[key].f_longitude;
 
-    riwayatItem.appendChild(riwayatText);
-    riwayatItem.appendChild(riwayatButton);
-    riwayatContainer.appendChild(riwayatItem);
-  });
-}
+        var petaCell = document.createElement("td");
+        var petaButton = document.createElement("button");
+        petaButton.textContent = "Tampilkan Peta";
+        petaButton.addEventListener("click", function () {
+          var latitude = riwayat[key].f_latitude;
+          var longitude = riwayat[key].f_longitude;
+          showMap(latitude, longitude);
+        });
+        petaCell.appendChild(petaButton);
 
+        riwayatRow.appendChild(idCell);
+        riwayatRow.appendChild(latitudeCell);
+        riwayatRow.appendChild(longitudeCell);
+        riwayatRow.appendChild(petaCell);
 
-    // function showMap(latitude, longitude) {
-    //   var mapDiv = document.getElementById("map");
-    //   mapDiv.style.display = "block"; // Tampilkan peta
+        riwayatBody.appendChild(riwayatRow);
+      });
+    }
 
-    //   var myLatLng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
-    //   var map = new google.maps.Map(mapDiv, {
-    //     zoom: 12,
-    //     center: myLatLng
-    //   });
-
-    //   var marker = new google.maps.Marker({
-    //     position: myLatLng,
-    //     map: map,
-    //     title: "Lokasi"
-    //   });
-    // }
     function showMap(latitude, longitude) {
       var url = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
       window.open(url, "_blank");
     }
   </script>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWL83y2wcA2CrMzZZKBY6S0SHcs5Tp9u0&callback=initMap" async defer></script> -->
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script> -->
 </body>
+
 </html>
